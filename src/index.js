@@ -1,31 +1,35 @@
 module.exports = function check(str, bracketsConfig) {
-    // 1 - string check
-    if(str[0] === ')' || str[0] === '}' || str[0] === ']') {
-        return false;   
+    const openedBrackets = [];
+    const closedBrackets =[]; 
+     for (let i = 0; i < bracketsConfig.length; i++) {
+      openedBrackets.push(bracketsConfig[i][0]);
+      closedBrackets.push(bracketsConfig[i][1]);
+    } 
+    
+    for (let i = 0; i < bracketsConfig.length; i++) {
+        if(str[0] === bracketsConfig[i][1]) {
+      return false;
+      }
     }
-
-    const roundO = '(';
-    const roundC = ')';
-    const squareO = '[';
-    const squareC = ']';
-    const figuredO = '{';
-    const figuredC = '}';
-    let toBeClosed = [];
-
+    
+    const toBeClosed = [];
+     
     for (let i = 0; i < str.length; i++) {
-        if(str[i] === roundO || str[i] === squareO || str[i] === figuredO) {
-            toBeClosed.push(str[i]);
-        } 
-        else {
-            let lastNotClosed = toBeClosed.pop();
-            if(lastNotClosed === roundO && str[i] != roundC || lastNotClosed === squareO && str[i] != squareC || lastNotClosed === figuredO && str[i] != figuredC) {
-            return false;
-            }
+      if(openedBrackets.indexOf(str[i]) !== -1) {
+        toBeClosed.push(str[i]);
+      } 
+      else {
+        let lastNotClosed = toBeClosed.pop();
+        const openedBracketIndex = openedBrackets.indexOf(lastNotClosed);
+        if(closedBrackets[openedBracketIndex] !== str[i]) {
+          return false;
         }
+      }   
     }
     if(toBeClosed.length > 0) {
-        return false;
-    } else {
-        return true;
-    }   
+      return false;
+    }
+    else {
+    return true;
+    }  
 }
